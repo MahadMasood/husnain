@@ -14,11 +14,16 @@ export default function BentoGrid() {
           </p>
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 h-[120vh] md:h-[80vh]">
+        {/* FIX 1: Changed h-[120vh] to h-auto so it grows with content on mobile.
+           FIX 2: Added md:grid-rows-2 so rigid rows only apply to desktop.
+        */}
+        <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-auto md:h-[80vh]">
           
           {/* Large Feature Item */}
-          <div className="col-span-1 md:col-span-2 row-span-2 relative group overflow-hidden rounded-lg bg-zinc-900 border border-white/10 cursor-target">
+          {/* FIX 3: Added h-[50vh] md:h-auto so this specific card is tall on mobile 
+             but fills the grid cell automatically on desktop.
+          */}
+          <div className="col-span-1 md:col-span-2 row-span-2 relative group overflow-hidden rounded-lg bg-zinc-900 border border-white/10 cursor-target h-[50vh] md:h-auto">
             <img 
               src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=1000&auto=format&fit=crop" 
               className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
@@ -40,8 +45,8 @@ export default function BentoGrid() {
             </div>
           </div>
 
-          {/* Top Right Item */}
-          <div className="col-span-1 md:col-span-2 relative group overflow-hidden rounded-lg bg-zinc-900 border border-white/10 cursor-target">
+          {/* Top Right Item - Added min-h for mobile safety */}
+          <div className="col-span-1 md:col-span-2 relative group overflow-hidden rounded-lg bg-zinc-900 border border-white/10 cursor-target min-h-[300px] md:min-h-0">
             <img 
               src="https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?q=80&w=1000&auto=format&fit=crop" 
               className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 brightness-90"
@@ -64,8 +69,8 @@ export default function BentoGrid() {
             </div>
           </div>
 
-          {/* Bottom Left - Sale Card */}
-          <div className="col-span-1 relative group overflow-hidden rounded-lg bg-red-600 border border-red-500 flex items-center justify-center p-8 hover:bg-red-700 transition-colors cursor-target">
+          {/* Bottom Left - Sale Card - Added min-h for mobile safety */}
+          <div className="col-span-1 relative group overflow-hidden rounded-lg bg-red-600 border border-red-500 flex items-center justify-center p-8 hover:bg-red-700 transition-colors cursor-target min-h-[300px] md:min-h-0">
             <div className="text-center">
               <p className="text-white/80 font-mono text-xs tracking-widest mb-2">FLASH_SALE</p>
               <h3 className="text-6xl md:text-7xl font-black uppercase text-white tracking-tighter mb-2">
@@ -77,8 +82,8 @@ export default function BentoGrid() {
             </div>
           </div>
 
-          {/* Bottom Right - Shoes */}
-          <div className="col-span-1 relative group overflow-hidden rounded-lg bg-zinc-900 border border-white/10 cursor-target">
+          {/* Bottom Right - Shoes - Added min-h for mobile safety */}
+          <div className="col-span-1 relative group overflow-hidden rounded-lg bg-zinc-900 border border-white/10 cursor-target min-h-[300px] md:min-h-0">
             <img 
               src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop" 
               className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-3"
