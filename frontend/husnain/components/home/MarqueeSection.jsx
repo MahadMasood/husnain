@@ -7,23 +7,30 @@ export default function MarqueeSection() {
   const firstText = useRef(null);
   const secondText = useRef(null);
   const slider = useRef(null);
-  let xPercent = 0;
+  const xPercentRef = useRef(0);
+  const rafRef = useRef(null);
   let direction = -1;
 
   useEffect(() => {
-    requestAnimationFrame(animation);
-  }, []);
+    const animation = () => {
+      if (xPercentRef.current <= -100) xPercentRef.current = 0;
+      if (xPercentRef.current > 0) xPercentRef.current = -100;
+      
+      gsap.set(firstText.current, { xPercent: xPercentRef.current });
+      gsap.set(secondText.current, { xPercent: xPercentRef.current });
+      
+      xPercentRef.current += 0.08 * direction; // Adjust speed here
+      rafRef.current = requestAnimationFrame(animation);
+    };
 
-  const animation = () => {
-    if (xPercent <= -100) xPercent = 0;
-    if (xPercent > 0) xPercent = -100;
-    
-    gsap.set(firstText.current, { xPercent: xPercent });
-    gsap.set(secondText.current, { xPercent: xPercent });
-    
-    xPercent += 0.08 * direction; // Adjust speed here
-    requestAnimationFrame(animation);
-  };
+    rafRef.current = requestAnimationFrame(animation);
+
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="relative overflow-hidden bg-black text-white py-4 border-y border-white/10">

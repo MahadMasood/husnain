@@ -162,6 +162,8 @@ const CardSwap = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
 
+  const MemoCard = React.memo(Card);
+  
   const rendered = childArr.map((child, i) =>
     isValidElement(child)
       ? cloneElement(child, {

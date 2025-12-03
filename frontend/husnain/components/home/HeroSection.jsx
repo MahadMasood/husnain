@@ -1,31 +1,54 @@
-import React from "react";
-import DomeGallery from "../ui/DomeGallery";
-import PixelBlast from "../ui/PixelBlast";
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import dynamic from 'next/dynamic';
+const PixelBlast = dynamic(() => import('../ui/PixelBlast'), { ssr: false });
 import HeroCards from "./HeroCards";
 
 export default function HeroSection() {
+  const [showPixelBlast, setShowPixelBlast] = useState(false);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowPixelBlast(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="relative  h-screen overflow-hidden">
+    <div className="relative  h-screen overflow-hidden" ref={containerRef}>
       {/* PixelBlast Background */}
       <div className="absolute inset-0">
-        <PixelBlast
-          variant="square"
-          pixelSize={6}
-          color="#ff474c"
-          patternScale={4}
-          patternDensity={3.5}
-          pixelSizeJitter={0.5}
-          enableRipples={true}
-          rippleSpeed={1.5}
-          rippleThickness={0.02}
-          rippleIntensityScale={3}
-          liquid={true}
-          liquidStrength={0.05}
-          liquidWobbleSpeed={8}
-          speed={0.8}
-          edgeFade={0}
-          transparent={true}
-        />
+        {showPixelBlast && (
+          <PixelBlast
+            variant="square"
+            pixelSize={6}
+            color="#ff474c"
+            patternScale={4}
+            patternDensity={3.5}
+            pixelSizeJitter={0.5}
+            enableRipples={true}
+            rippleSpeed={1.5}
+            rippleThickness={0.02}
+            rippleIntensityScale={3}
+            liquid={true}
+            liquidStrength={0.05}
+            liquidWobbleSpeed={8}
+            speed={0.8}
+            edgeFade={0}
+            transparent={true}
+          />
+        )}
       </div>
 
       {/* Heavy dark overlay */}
