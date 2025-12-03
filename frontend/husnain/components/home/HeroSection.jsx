@@ -1,24 +1,29 @@
 "use client";
 import React, { useState, useEffect, useRef, memo } from "react";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 
 // Lazy load PixelBlast with no SSR
-const PixelBlast = dynamic(() => import('../ui/PixelBlast'), { 
+const PixelBlast = dynamic(() => import("../ui/PixelBlast"), {
   ssr: false,
-  loading: () => <div className="w-full h-full bg-black" />
+  loading: () => <div className="w-full h-full bg-black" />,
 });
 
 // Memoize HeroCards to prevent unnecessary re-renders
-const HeroCards = memo(dynamic(() => import('./HeroCards'), { 
-  ssr: false 
-}));
+const HeroCards = memo(
+  dynamic(() => import("./HeroCards"), {
+    ssr: false,
+  })
+);
 
 // Memoize static content components
-const HeroContent = memo(() => (
+const HeroContent = memo(() => {
+    const router = useRouter();
+  return (
   <div className="flex-1 max-w-2xl">
     {/* Terminal-style prefix */}
     <div className="font-mono text-red-500 text-sm mb-6 opacity-80">
-      {'>'} INITIALIZING_PROTOCOL
+      {">"} INITIALIZING_PROTOCOL
     </div>
 
     {/* Main Heading */}
@@ -36,7 +41,10 @@ const HeroContent = memo(() => (
     </p>
 
     {/* Single CTA */}
-    <button className="group relative font-mono text-sm md:text-base px-8 py-4 border border-red-500/50 text-red-500 hover:bg-red-500 hover:text-black transition-all duration-300 uppercase tracking-widest cursor-target">
+    <button
+      onClick={() => router.push("/products")}
+      className="group relative font-mono text-sm md:text-base px-8 py-4 border border-red-500/50 text-red-500 hover:bg-red-500 hover:text-black transition-all duration-300 uppercase tracking-widest cursor-target"
+    >
       <span className="relative z-10">ENTER THE VOID</span>
     </button>
 
@@ -47,9 +55,10 @@ const HeroContent = memo(() => (
       <span>NODES: 47,392</span>
     </div>
   </div>
-));
+  );
+});
 
-HeroContent.displayName = 'HeroContent';
+HeroContent.displayName = "HeroContent";
 
 const CornerAccent = memo(() => (
   <div className="absolute top-8 right-8 font-mono text-xs text-white text-right opacity-60">
@@ -59,16 +68,16 @@ const CornerAccent = memo(() => (
   </div>
 ));
 
-CornerAccent.displayName = 'CornerAccent';
+CornerAccent.displayName = "CornerAccent";
 
 export default function HeroSection() {
   const [showPixelBlast, setShowPixelBlast] = useState(false);
   const containerRef = useRef(null);
   const observerRef = useRef(null);
-
+  
   useEffect(() => {
     if (!containerRef.current) return;
-    
+
     observerRef.current = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -83,7 +92,7 @@ export default function HeroSection() {
     );
 
     observerRef.current.observe(containerRef.current);
-    
+
     return () => {
       observerRef.current?.disconnect();
     };

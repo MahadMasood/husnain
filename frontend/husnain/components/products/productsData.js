@@ -1,0 +1,17 @@
+export const PRODUCTS = [
+  { id: 1, name: 'Oversized Streetwear Hoodie', category: 'Hoodies', size: ['S', 'M', 'L', 'XL'], price: 89, rating: 4.7, inStock: true, colors: ['Black', 'White', 'Red'], gender: 'Unisex', image: '/hero/hero1.jpg', new: true },
+  { id: 2, name: 'Distressed Denim Jacket', category: 'Jackets', size: ['M', 'L', 'XL'], price: 129, rating: 4.8, inStock: true, colors: ['Blue', 'Black'], gender: 'Unisex', image: '/hero/hero2.jpg', new: false },
+  { id: 3, name: 'Cargo Pants Urban Edition', category: 'Pants', size: ['S', 'M', 'L', 'XL', 'XXL'], price: 79, rating: 4.5, inStock: false, colors: ['Olive', 'Black', 'Khaki'], gender: 'Men', image: '/hero/hero3.jpg', new: false },
+  { id: 4, name: 'Graphic Tee "Revolution"', category: 'T-Shirts', size: ['XS', 'S', 'M', 'L', 'XL'], price: 39, rating: 4.3, inStock: true, colors: ['Black', 'White', 'Gray'], gender: 'Unisex', image: '/hero/hero1.jpg', new: true },
+  { id: 5, name: 'Cropped Leather Jacket', category: 'Jackets', size: ['S', 'M', 'L'], price: 199, rating: 4.9, inStock: true, colors: ['Black', 'Brown'], gender: 'Women', image: '/hero/hero2.jpg', new: true },
+  { id: 6, name: 'High-Waisted Joggers', category: 'Pants', size: ['XS', 'S', 'M', 'L', 'XL'], price: 69, rating: 4.6, inStock: true, colors: ['Black', 'Gray', 'Navy'], gender: 'Women', image: '/hero/hero3.jpg', new: false },
+  { id: 7, name: 'Vintage Wash Hoodie', category: 'Hoodies', size: ['M', 'L', 'XL'], price: 95, rating: 4.4, inStock: true, colors: ['Charcoal', 'Sand', 'Navy'], gender: 'Unisex', image: '/hero/hero1.jpg', new: false },
+  { id: 8, name: 'Slim Fit Biker Jeans', category: 'Pants', size: ['28', '30', '32', '34', '36'], price: 89, rating: 4.5, inStock: false, colors: ['Black', 'Blue'], gender: 'Men', image: '/hero/hero2.jpg', new: false },
+  { id: 9, name: 'Longline T-Shirt', category: 'T-Shirts', size: ['S', 'M', 'L', 'XL'], price: 45, rating: 4.2, inStock: true, colors: ['White', 'Black', 'Olive'], gender: 'Men', image: '/hero/hero3.jpg', new: false },
+  { id: 10, name: 'Puffer Vest', category: 'Jackets', size: ['S', 'M', 'L', 'XL'], price: 119, rating: 4.7, inStock: true, colors: ['Black', 'Navy', 'Burgundy'], gender: 'Unisex', image: '/hero/hero1.jpg', new: true },
+  { id: 11, name: 'Ribbed Crop Top', category: 'T-Shirts', size: ['XS', 'S', 'M', 'L'], price: 35, rating: 4.4, inStock: true, colors: ['White', 'Black', 'Pink'], gender: 'Women', image: '/hero/hero2.jpg', new: false },
+  { id: 12, name: 'Tech Wear Bomber', category: 'Jackets', size: ['M', 'L', 'XL', 'XXL'], price: 179, rating: 4.8, inStock: true, colors: ['Black', 'Olive'], gender: 'Unisex', image: '/hero/hero3.jpg', new: true },
+  { id: 13, name: 'Oversized Sweatpants', category: 'Pants', size: ['S', 'M', 'L', 'XL'], price: 65, rating: 4.6, inStock: true, colors: ['Gray', 'Black', 'Cream'], gender: 'Unisex', image: '/hero/hero1.jpg', new: false },
+  { id: 14, name: 'Zip-Up Hoodie Premium', category: 'Hoodies', size: ['M', 'L', 'XL'], price: 99, rating: 4.7, inStock: true, colors: ['Black', 'Navy', 'Forest'], gender: 'Unisex', image: '/hero/hero2.jpg', new: false },
+  { id: 15, name: 'Vintage Band Tee', category: 'T-Shirts', size: ['S', 'M', 'L', 'XL'], price: 42, rating: 4.5, inStock: true, colors: ['Black', 'White'], gender: 'Unisex', image: '/hero/hero3.jpg', new: true },
+];
