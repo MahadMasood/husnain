@@ -5,7 +5,7 @@ import HeroCards from "./HeroCards";
 
 export default function HeroSection() {
   return (
-    <div className="relative w-screen h-screen overflow-hidden">
+    <div className="relative  h-screen overflow-hidden">
       {/* PixelBlast Background */}
       <div className="absolute inset-0">
         <PixelBlast
