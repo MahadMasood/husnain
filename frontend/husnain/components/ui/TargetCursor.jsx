@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useCallback, useMemo, useState } from 'react'; // Added useState
 import { gsap } from 'gsap';
 
 const TargetCursor = ({
@@ -19,14 +19,23 @@ const TargetCursor = ({
   const tickerFnRef = useRef(null);
   const activeStrengthRef = useRef(0);
 
-  const isMobile = useMemo(() => {
-    const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const isSmallScreen = window.innerWidth <= 768;
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
-    const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase());
-    return (hasTouchScreen && isSmallScreen) || isMobileUserAgent;
+  // --- FIX START: Changed from useMemo to useState + useEffect ---
+  const [isMobile, setIsMobile] = useState(true); // Default to true prevents flash on mobile
+
+  useEffect(() => {
+    // This logic now runs ONLY in the browser
+    const checkMobile = () => {
+      const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth <= 768;
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i;
+      const isMobileUserAgent = mobileRegex.test(userAgent.toLowerCase());
+      return (hasTouchScreen && isSmallScreen) || isMobileUserAgent;
+    };
+    
+    setIsMobile(checkMobile());
   }, []);
+  // --- FIX END ---
 
   const constants = useMemo(
     () => ({
@@ -47,7 +56,8 @@ const TargetCursor = ({
   }, []);
 
   useEffect(() => {
-    if (isMobile || !cursorRef.current) return;
+    // Added explicit window check here just to be safe
+    if (typeof window === 'undefined' || isMobile || !cursorRef.current) return;
 
     const originalCursor = document.body.style.cursor;
     if (hideDefaultCursor) {
