@@ -355,7 +355,7 @@ const PixelBlast = ({
         canvas,
         antialias,
         alpha: true,
-        powerPreference: 'high-performance'
+        powerPreference: 'low-power'
       });
       renderer.domElement.style.width = '100%';
       renderer.domElement.style.height = '100%';

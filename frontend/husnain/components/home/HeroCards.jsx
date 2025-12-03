@@ -6,7 +6,7 @@ const HeroCards = () => {
   return (
     <div className="h-full w-full">
       <CardSwap
-        width="70%"
+        width="110%"
         height="auto"
         cardDistance={60}
         verticalDistance={70}
