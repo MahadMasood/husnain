@@ -55,7 +55,7 @@ export default function HeroSection() {
           </p>
 
           {/* Single CTA */}
-          <button className="group relative font-mono text-sm md:text-base px-8 py-4 border border-red-500/50 text-red-500 hover:bg-red-500 hover:text-black transition-all duration-300 uppercase tracking-widest">
+          <button className="group relative font-mono text-sm md:text-base px-8 py-4 border border-red-500/50 text-red-500 hover:bg-red-500 hover:text-black transition-all duration-300 uppercase tracking-widest cursor-target">
             <span className="relative z-10">ENTER THE VOID</span>
           </button>
 
