@@ -4,6 +4,8 @@ import HeroSection from "@/components/home/HeroSection";
 import MarqueeSection from "@/components/home/MarqueeSection";
 import BentoGrid from "@/components/home/BentoGrid";
 import StatementSection from "@/components/home/StatementSection";
+import NewArrival from "@/components/home/NewArrivals";
+import AmazingPicks from "@/components/home/AmazingPicks";
 export default function Home() {
   return (
     <>
@@ -11,6 +13,8 @@ export default function Home() {
       <HeroSection />
       <MarqueeSection />
       <BentoGrid />
+      <NewArrival />
+      <AmazingPicks />
       <StatementSection />
     </>
   );

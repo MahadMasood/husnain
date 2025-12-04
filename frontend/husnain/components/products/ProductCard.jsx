@@ -9,6 +9,7 @@ const ProductCard = memo(({
   viewMode,
   isFavorite,
   onToggleFavorite,
+  clickable = true,
 }) => {
     const router = useRouter();
   const getColorHex = (colorName) => {
@@ -34,7 +35,7 @@ const ProductCard = memo(({
 
   return (
     <div
-    onClick={()=>router.push("products/123")}
+    onClick={()=>clickable && router.push("products/123")}
       className={`border border-white/10 hover:border-red-500/50 transition-all group relative ${
         viewMode === 'list' ? 'flex gap-4' : ''
       }`}
