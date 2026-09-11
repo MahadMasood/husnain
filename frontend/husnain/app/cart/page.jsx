@@ -9,6 +9,11 @@ import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, Tag } from "lucide-react";
 export default function CartPage() {
   const { cartItems, cartCount, cartTotal, updateQuantity, removeFromCart, clearCart } = useCart();
 
+  const shipping = cartTotal >= 100 ? 0 : 9.99;
+  const tax = cartTotal * 0.08;
+  const orderTotal = cartTotal + shipping + tax;
+
+
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen bg-stone-50">
@@ -28,10 +33,6 @@ export default function CartPage() {
       </div>
     );
   }
-
-  const shipping = cartTotal >= 100 ? 0 : 9.99;
-  const tax = cartTotal * 0.08;
-  const orderTotal = cartTotal + shipping + tax;
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -68,7 +69,7 @@ export default function CartPage() {
                       <p>Colour: <span className="text-slate-600">{item.color}</span></p>
                     </div>
                   </div>
-                  <p className="font-black text-lg text-slate-900 shrink-0">${(item.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-black text-lg text-slate-900 shrink-0">Rs. {(item.price * item.quantity).toFixed(2)}</p>
                 </div>
 
                 <div className="flex items-center justify-between mt-4">
@@ -129,35 +130,38 @@ export default function CartPage() {
             <div className="border-t border-stone-100 pt-4 space-y-3">
               <div className="flex justify-between text-sm text-stone-500">
                 <span>Subtotal</span>
-                <span className="font-mono">${cartTotal.toFixed(2)}</span>
+                <span className="font-mono">Rs. {cartTotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-sm text-stone-500">
                 <span>Shipping</span>
                 <span className="font-mono">
                   {shipping === 0
                     ? <span className="text-green-600 font-semibold">FREE</span>
-                    : `$${shipping.toFixed(2)}`}
+                    : `Rs. ${shipping.toFixed(2)}`}
                 </span>
               </div>
               {shipping > 0 && (
                 <p className="text-xs text-amber-600 font-mono bg-amber-50 rounded-lg px-3 py-2">
-                  Add ${(100 - cartTotal).toFixed(2)} more for free shipping
+                  Add Rs. {(100 - cartTotal).toFixed(2)} more for free shipping
                 </p>
               )}
               <div className="flex justify-between text-sm text-stone-500">
                 <span>Tax (est.)</span>
-                <span className="font-mono">${tax.toFixed(2)}</span>
+                <span className="font-mono">Rs. {tax.toFixed(2)}</span>
               </div>
             </div>
 
             <div className="border-t border-stone-200 pt-4">
               <div className="flex justify-between items-center mb-5">
                 <span className="font-bold text-slate-900 text-lg">Total</span>
-                <span className="font-black text-2xl text-slate-900">${orderTotal.toFixed(2)}</span>
+                <span className="font-black text-2xl text-slate-900">Rs. {orderTotal.toFixed(2)}</span>
               </div>
-              <button className="w-full py-4 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 transition-all hover:shadow-lg hover:shadow-amber-200 text-sm uppercase tracking-wide">
+              <Link
+                href="/checkout"
+                className="w-full py-4 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 transition-all hover:shadow-lg hover:shadow-amber-200 text-sm uppercase tracking-wide block text-center"
+              >
                 Proceed to Checkout
-              </button>
+              </Link>
               <p className="text-center font-mono text-xs text-stone-400 mt-3">
                 🔒 Secure checkout · SSL encrypted
               </p>

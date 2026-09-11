@@ -36,7 +36,7 @@ export default function StaggeredMenuWithCart() {
     <div className="fixed top-0 left-0 w-screen h-screen pointer-events-none overflow-hidden z-[100]">
 
       {/* Cart Toggle Button */}
-      <button
+      {!isCartOpen && <button
         onClick={toggleMenu}
         className="fixed top-4 right-6 z-[101] pointer-events-auto flex items-center gap-2 bg-slate-900 hover:bg-amber-600 text-white px-4 py-2.5 rounded-full transition-all shadow-lg"
         aria-label="Open shopping bag"
@@ -47,7 +47,7 @@ export default function StaggeredMenuWithCart() {
             {cartCount}
           </span>
         )}
-      </button>
+      </button>}
 
       {/* Backdrop */}
       <div
@@ -127,8 +127,8 @@ export default function StaggeredMenuWithCart() {
                   </div>
 
                   <div className="text-right flex-shrink-0">
-                    <p className="font-black text-slate-900">${item.price * item.quantity}</p>
-                    {item.quantity > 1 && <p className="font-mono text-xs text-stone-400">${item.price} ea</p>}
+                    <p className="font-black text-slate-900">Rs. {item.price * item.quantity}</p>
+                    {item.quantity > 1 && <p className="font-mono text-xs text-stone-400">Rs. {item.price} ea</p>}
                   </div>
                 </div>
               ))}
@@ -141,12 +141,12 @@ export default function StaggeredMenuWithCart() {
           <div className="border-t border-stone-200 p-6 space-y-4 bg-stone-50">
             <div className="flex items-center justify-between">
               <span className="text-stone-600">Subtotal</span>
-              <span className="font-black text-2xl text-slate-900">${cartTotal}</span>
+              <span className="font-black text-2xl text-slate-900">Rs. {cartTotal}</span>
             </div>
             <p className="font-mono text-xs text-stone-400 text-center">Shipping & taxes calculated at checkout</p>
-            <a href="/cart" className="block w-full py-4 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 transition-colors uppercase tracking-wider text-center text-sm">
+            <Link href="/cart" onClick={closeMenu} className="block w-full py-4 bg-amber-500 text-white font-bold rounded-xl hover:bg-amber-600 transition-colors uppercase tracking-wider text-center text-sm">
               View Full Bag & Checkout
-            </a>
+            </Link>
             <button
               onClick={closeMenu}
               className="w-full py-3 border border-slate-900 text-slate-900 font-mono text-sm rounded-xl hover:bg-slate-900 hover:text-white transition-colors"

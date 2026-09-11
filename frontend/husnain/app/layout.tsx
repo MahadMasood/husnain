@@ -4,6 +4,7 @@ import "./globals.css";
 import CursorProvider from "@/components/ui/CursorProvider";
 import StaggeredMenuWithCart from "@/components/ui/StaggeredMenu";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,11 +31,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CartProvider>
-          <StaggeredMenuWithCart />
-          <CursorProvider />
-          {children}
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <StaggeredMenuWithCart />
+            <CursorProvider />
+            {children}
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

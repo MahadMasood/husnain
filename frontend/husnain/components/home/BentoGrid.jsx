@@ -27,10 +27,10 @@ export default function BentoGrid() {
                 <div>
                   <p className="text-amber-300 font-mono text-xs mb-2 tracking-widest uppercase">Featured</p>
                   <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white mb-4">
-                    Outerwear
+                    Summer Sale
                   </h3>
                 </div>
-                <Link href="/products?category=Jackets" className="bg-amber-500 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-amber-600 transition-all duration-300 group-hover:scale-110">
+                <Link href="/products?category=Summer" className="bg-amber-500 text-white w-12 h-12 rounded-full flex items-center justify-center hover:bg-amber-600 transition-all duration-300 group-hover:scale-110">
                   <ArrowUpRight className="w-5 h-5" />
                 </Link>
               </div>
@@ -49,13 +49,13 @@ export default function BentoGrid() {
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="text-2xl md:text-3xl font-black uppercase text-white tracking-tighter">
-                    Accessories
+                    Winter Sale
                   </h3>
-                  <p className="text-white/70 font-mono text-xs mt-1 tracking-wider uppercase">Limited Edition</p>
+                  <p className="text-white/70 font-mono text-xs mt-1 tracking-wider uppercase">Up to 50% Off</p>
                 </div>
                 <span className="w-2 h-2 bg-amber-400 animate-pulse rounded-full" />
               </div>
-              <Link href="/products?category=Accessories" className="self-end text-white font-mono text-xs uppercase tracking-widest hover:text-amber-300 transition-colors flex items-center gap-1">
+              <Link href="/products?category=Winter" className="self-end text-white font-mono text-xs uppercase tracking-widest hover:text-amber-300 transition-colors flex items-center gap-1">
                 Explore <ArrowUpRight className="w-3 h-3" />
               </Link>
             </div>
@@ -65,8 +65,8 @@ export default function BentoGrid() {
           <div className="col-span-1 relative group overflow-hidden rounded-2xl bg-amber-500 flex items-center justify-center p-8 hover:bg-amber-600 transition-colors min-h-[300px] md:min-h-0">
             <Link href="/products?gender=Kids" className="text-center">
               <p className="text-white/80 font-mono text-xs tracking-widest mb-2 uppercase">New In</p>
-              <h3 className="text-5xl md:text-6xl font-black uppercase text-white tracking-tighter mb-2">
-                Kids
+              <h3 className="text-4xl md:text-5xl font-black uppercase text-white tracking-tighter mb-2">
+                Kids Collection
               </h3>
               <p className="text-white font-mono text-sm tracking-wider">Ages 2–14</p>
               <div className="mt-4 h-px bg-white/30" />

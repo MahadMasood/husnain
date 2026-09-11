@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 // Cart item type
 export interface CartItem {
@@ -35,6 +35,27 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('threadco-cart');
+      if (saved) {
+        setCartItems(JSON.parse(saved));
+      }
+    } catch (e) {
+      // Ignore parse errors
+    }
+    setIsHydrated(true);
+  }, []);
+
+  // Persist cart to localStorage on every change (after initial hydration)
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem('threadco-cart', JSON.stringify(cartItems));
+    }
+  }, [cartItems, isHydrated]);
 
   // Calculate cart count
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);

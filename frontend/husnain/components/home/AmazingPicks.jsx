@@ -1,11 +1,26 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { DraggableCardContainer, DraggableCardBody } from "../ui/draggable-card";
 import ProductCard from "../products/ProductCard";
-import { PRODUCTS } from "../products/productsData";
+import { fetchProducts } from "../../lib/api";
 
 export default function AmazingPicks() {
-  const products = PRODUCTS.filter(p => p.rating >= 4.7).slice(0, 5);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const data = await fetchProducts({ minRating: 4.7, limit: 5 });
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getProducts();
+  }, []);
 
   const positions = [
     "absolute top-20 left-[10%] -rotate-[6deg] z-10",
@@ -30,14 +45,18 @@ export default function AmazingPicks() {
           Top<br />Picks
         </p>
 
-        {products.map((product, index) => (
-          <DraggableCardBody
-            key={product.id}
-            className={`${positions[index] || "hidden"} w-[300px] shadow-2xl rounded-xl overflow-hidden`}
-          >
+        {loading ? (
+          <p className="z-10 text-xl font-mono text-stone-500">Loading top picks...</p>
+        ) : (
+          products.map((product, index) => (
+            <DraggableCardBody
+              key={product._id || product.id}
+              className={`${positions[index] || "hidden"} w-[300px] shadow-2xl rounded-xl overflow-hidden`}
+            >
             <ProductCard product={product} isFavorite={false} onToggleFavorite={() => {}} clickable={false} />
-          </DraggableCardBody>
-        ))}
+            </DraggableCardBody>
+          ))
+        )}
       </DraggableCardContainer>
     </section>
   );

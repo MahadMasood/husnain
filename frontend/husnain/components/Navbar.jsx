@@ -18,10 +18,9 @@ const Navbar = () => {
       bgColor: '#fdf6ec',
       textColor: '#1a1a2e',
       links: [
-        { label: 'Men', href: '/products?gender=Men' },
-        { label: 'Women', href: '/products?gender=Women' },
-        { label: 'Unisex', href: '/products?gender=Unisex' },
-        { label: 'Kids', href: '/kids' },
+        { label: 'Kids Collection', href: '/products?gender=Kids' },
+        { label: 'Summer Sale', href: '/products?category=Summer' },
+        { label: 'Winter Sale', href: '/products?category=Winter' },
       ],
     },
     {
@@ -30,8 +29,8 @@ const Navbar = () => {
       textColor: '#ffffff',
       links: [
         { label: 'All Sale Items', href: '/sale' },
-        { label: 'Up to 50% off', href: '/sale?filter=50' },
-        { label: 'Kids Sale', href: '/sale?gender=Kids' },
+        { label: 'Summer Sale', href: '/sale?season=Summer' },
+        { label: 'Winter Sale', href: '/sale?season=Winter' },
       ],
     },
   ];

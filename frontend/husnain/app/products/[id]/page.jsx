@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import { useRouter, useParams } from "next/navigation";
 import { PRODUCTS } from "@/components/products/productsData";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
 
 const getColorHex = (colorName) => {
   const colorMap = {
@@ -22,6 +23,7 @@ export default function ProductDetailsPage() {
   const router = useRouter();
   const params = useParams();
   const productId = parseInt(params.id);
+  const { addToCart } = useCart();
 
   const product = PRODUCTS.find((p) => p.id === productId);
   const related = PRODUCTS.filter((p) => p.id !== productId && (p.category === product?.category || p.gender === product?.gender)).slice(0, 4);
@@ -53,6 +55,18 @@ export default function ProductDetailsPage() {
 
   const handleAddToBag = () => {
     if (!selectedSize) return;
+    // Add item to cart for each unit of the selected quantity
+    for (let i = 0; i < quantity; i++) {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        size: selectedSize,
+        color: selectedColor,
+        category: product.category,
+      });
+    }
     setAddedToBag(true);
     setTimeout(() => setAddedToBag(false), 2000);
   };
@@ -134,7 +148,7 @@ export default function ProductDetailsPage() {
               <span className="font-mono text-sm text-stone-500">{product.rating} · 128 reviews</span>
             </div>
 
-            <div className="text-4xl font-black text-slate-900">${product.price}</div>
+            <div className="text-4xl font-black text-slate-900">Rs. {product.price}</div>
 
             <p className="text-stone-600 leading-relaxed">
               Premium quality {product.category.toLowerCase()} crafted for everyday wear. Designed for comfort and durability across every season, suitable for the whole family.
@@ -227,7 +241,7 @@ export default function ProductDetailsPage() {
             {/* Trust badges */}
             <div className="grid grid-cols-3 gap-3">
               {[
-                { icon: Truck, title: "Free Shipping", desc: "Orders over $100" },
+                { icon: Truck, title: "Free Shipping", desc: "Orders over Rs. 100" },
                 { icon: RotateCcw, title: "30-Day Returns", desc: "Easy & free" },
                 { icon: Shield, title: "Quality Promise", desc: "2-year warranty" },
               ].map(({ icon: Icon, title, desc }) => (
@@ -267,7 +281,7 @@ export default function ProductDetailsPage() {
                   <div className="p-4">
                     <h3 className="font-bold text-sm text-slate-900 mb-1 group-hover:text-amber-600 transition-colors leading-tight">{p.name}</h3>
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-black text-slate-900">${p.price}</span>
+                      <span className="text-lg font-black text-slate-900">Rs. {p.price}</span>
                       <div className="text-amber-400 text-xs">{'★'.repeat(Math.round(p.rating))}</div>
                     </div>
                   </div>

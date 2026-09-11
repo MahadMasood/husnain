@@ -3,6 +3,7 @@ import React, { memo } from 'react';
 import Image from 'next/image';
 import { Heart } from 'lucide-react';
 import { useRouter } from "next/navigation";
+import { useCart } from '@/context/CartContext';
 
 const ProductCard = memo(({
   product,
@@ -12,6 +13,21 @@ const ProductCard = memo(({
   clickable = true,
 }) => {
   const router = useRouter();
+  const { addToCart } = useCart();
+
+  const handleAddToBag = (e) => {
+    e.stopPropagation();
+    if (!product.inStock) return;
+    addToCart({
+      id: product.id || product._id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      size: product.size?.[0] || 'One Size',
+      color: product.colors?.[0] || 'Default',
+      category: product.category,
+    });
+  };
 
   const getColorHex = (colorName) => {
     const colorMap = {
@@ -95,10 +111,10 @@ const ProductCard = memo(({
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-xl font-black text-slate-900">${product.price}</span>
+          <span className="text-xl font-black text-slate-900">Rs. {product.price}</span>
           <button
             disabled={!product.inStock}
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleAddToBag}
             className={`px-3 py-2 font-mono text-xs rounded transition-colors ${
               product.inStock
                 ? 'bg-amber-500 text-white hover:bg-amber-600'

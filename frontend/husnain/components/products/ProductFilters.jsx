@@ -95,8 +95,8 @@ const ProductFilters = memo(({
       <FilterSection title="Price Range">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="font-mono text-sm text-stone-500">${priceRange[0]}</span>
-            <span className="font-mono text-sm text-stone-500">${priceRange[1]}</span>
+            <span className="font-mono text-sm text-stone-500">Rs. {priceRange[0]}</span>
+            <span className="font-mono text-sm text-stone-500">Rs. {priceRange[1]}</span>
           </div>
           <div className="flex items-center justify-center">
             <ElasticSlider

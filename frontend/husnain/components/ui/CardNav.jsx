@@ -1,10 +1,8 @@
 "use client";
 import { useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { ShoppingBag } from 'lucide-react';
 // use your own icon import if react-icons is not available
 import { GoArrowUpRight } from 'react-icons/go';
-import { useCart } from '@/context/CartContext';
 const CardNav = ({
   logo,
   logoAlt = 'Logo',
@@ -21,7 +19,6 @@ const CardNav = ({
   const navRef = useRef(null);
   const cardsRef = useRef([]);
   const tlRef = useRef(null);
-  const { openCart } = useCart();
   const calculateHeight = () => {
     const navEl = navRef.current;
     if (!navEl) return 260;
@@ -167,15 +164,6 @@ const CardNav = ({
           <div className="logo-container flex items-center md:absolute md:left-1/2 md:top-1/2 md:-translate-x-1/2 md:-translate-y-1/2 order-1 md:order-none">
             <img src={logo} alt={logoAlt} className="logo h-[28px]" />
           </div>
-
-          <button
-            onClick={openCart}
-            type="button"
-            className="card-nav-cta-button hidden md:inline-flex border-0 rounded-[calc(0.75rem-0.2rem)] px-4 items-center h-full font-medium cursor-pointer transition-colors duration-300 cursor-target"
-            style={{ backgroundColor: buttonBgColor, color: buttonTextColor }}
-          >
-            Cart <ShoppingBag className="ml-2 w-4 h-4" />
-          </button>
         </div>
 
         <div
