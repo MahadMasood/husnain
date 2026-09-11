@@ -20,7 +20,7 @@ connectDB();
 
 const app = express();
 
-app.use(cors({ origin: ["http://localhost:3000", "https://husnain-fashion-hub.vercel.app"], credentials: true }));
+app.use(cors({ origin: ["http://localhost:3000", "https://husnain-two.vercel.app"], credentials: true }));
 app.use(helmet());
 app.use(express.json()); // To parse JSON data in req.body
 app.use(cookieParser());
