@@ -1,5 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
+dotenv.config(); // Load environment variables first
+
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
@@ -14,13 +16,11 @@ const orderRoutes = require('./routes/orderRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const path = require('path');
 
-dotenv.config();
-
 connectDB();
 
 const app = express();
 
-app.use(cors({ origin: ["http://localhost:3000", "https://husnain-fashion-hub.vercel.app"], credentials: true }));
+app.use(cors({ origin: ["http://localhost:3000", "https://husnain-two.vercel.app"], credentials: true }));
 app.use(helmet());
 app.use(express.json()); // To parse JSON data in req.body
 app.use(cookieParser());

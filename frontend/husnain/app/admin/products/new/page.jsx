@@ -10,17 +10,23 @@ export default function AddProduct() {
   const [formData, setFormData] = useState({
     name: '',
     price: '',
-    category: '',
+    category: 'Hoodies',
     gender: 'Unisex',
     image: '',
     inStock: true,
+    isNew: false,
+    colors: '',
+    size: '',
+    rating: 0,
+    images: [],
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
 
-  const uploadFileHandler = async (e) => {
+  const uploadPrimaryImageHandler = async (e) => {
     const file = e.target.files[0];
+    if (!file) return;
     const formDataData = new FormData();
     formDataData.append('image', file);
     setUploading(true);
@@ -35,6 +41,24 @@ export default function AddProduct() {
       const { data } = await api.post('/upload', formDataData, config);
 
       setFormData((prev) => ({ ...prev, image: data.image }));
+      setUploading(false);
+    } catch (err) {
+      console.error(err);
+      setUploading(false);
+    }
+  };
+
+  const uploadAdditionalImagesHandler = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    const formDataData = new FormData();
+    files.forEach(file => formDataData.append('images', file));
+    setUploading(true);
+
+    try {
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+      const { data } = await api.post('/upload/multiple', formDataData, config);
+      setFormData((prev) => ({ ...prev, images: data.images }));
       setUploading(false);
     } catch (err) {
       console.error(err);
@@ -59,8 +83,9 @@ export default function AddProduct() {
       await api.post('/products', {
         ...formData,
         price: Number(formData.price),
-        colors: ['Standard'], // Defaulting for simplicity
-        size: ['M'], // Defaulting for simplicity
+        rating: Number(formData.rating),
+        colors: formData.colors.split(",").map((c) => c.trim()).filter(Boolean),
+        size: formData.size.split(",").map((s) => s.trim()).filter(Boolean),
       });
       router.push('/admin/products');
     } catch (err) {
@@ -111,14 +136,18 @@ export default function AddProduct() {
 
             <div>
               <label className="block text-sm font-medium text-stone-600 mb-1">Category</label>
-              <input 
-                type="text" 
+              <select 
                 name="category"
-                required
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500" 
-              />
+                className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+              >
+                <option value="Hoodies">Hoodies</option>
+                <option value="Jackets">Jackets</option>
+                <option value="Pants">Pants</option>
+                <option value="T-Shirts">T-Shirts</option>
+                <option value="Accessories">Accessories</option>
+              </select>
             </div>
 
             <div>
@@ -136,28 +165,94 @@ export default function AddProduct() {
               </select>
             </div>
 
-            <div className="col-span-2">
-              <label className="block text-sm font-medium text-stone-600 mb-1">Image Upload</label>
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">Rating</label>
+              <input 
+                type="number" 
+                name="rating"
+                step="0.1"
+                min="0"
+                max="5"
+                value={formData.rating}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500" 
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">Colors (comma separated)</label>
+              <input 
+                type="text" 
+                name="colors"
+                value={formData.colors}
+                onChange={handleChange}
+                placeholder="Black, White, Red"
+                className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500" 
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-stone-600 mb-1">Sizes (comma separated)</label>
+              <input 
+                type="text" 
+                name="size"
+                value={formData.size}
+                onChange={handleChange}
+                placeholder="S, M, L, XL"
+                className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500" 
+              />
+            </div>
+
+            <div className="col-span-1">
+              <label className="block text-sm font-medium text-stone-600 mb-1">Primary Image</label>
               <input 
                 type="file" 
                 name="image"
-                onChange={uploadFileHandler}
-                className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500" 
+                accept="image/*"
+                onChange={uploadPrimaryImageHandler}
+                className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white" 
               />
-              {uploading && <p className="text-sm mt-2 text-stone-500">Uploading...</p>}
-              {formData.image && <p className="text-sm mt-2 text-green-600">Image selected: {formData.image}</p>}
+              {uploading && !formData.image && <p className="text-sm mt-2 text-stone-500">Uploading...</p>}
+              {formData.image && <p className="text-sm mt-2 text-green-600 truncate">Selected: {formData.image.split('/').pop()}</p>}
             </div>
 
-            <div className="col-span-2 flex items-center gap-3">
+            <div className="col-span-1">
+              <label className="block text-sm font-medium text-stone-600 mb-1">Additional Images (Gallery)</label>
               <input 
-                type="checkbox" 
-                id="inStock"
-                name="inStock"
-                checked={formData.inStock}
-                onChange={handleChange}
-                className="w-5 h-5 rounded border-stone-300 text-amber-500 focus:ring-amber-500"
+                type="file" 
+                name="images"
+                multiple
+                accept="image/*"
+                onChange={uploadAdditionalImagesHandler}
+                className="w-full px-4 py-2 border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white" 
               />
-              <label htmlFor="inStock" className="text-sm font-medium text-stone-600">Product is currently in stock</label>
+              {uploading && formData.images.length === 0 && <p className="text-sm mt-2 text-stone-500">Uploading...</p>}
+              {formData.images.length > 0 && <p className="text-sm mt-2 text-green-600">{formData.images.length} images selected</p>}
+            </div>
+
+            <div className="col-span-2 flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <input 
+                  type="checkbox" 
+                  id="inStock"
+                  name="inStock"
+                  checked={formData.inStock}
+                  onChange={handleChange}
+                  className="w-5 h-5 rounded border-stone-300 text-amber-500 focus:ring-amber-500"
+                />
+                <label htmlFor="inStock" className="text-sm font-medium text-stone-600">In Stock</label>
+              </div>
+              <div className="flex items-center gap-2">
+                <input 
+                  type="checkbox" 
+                  id="isNew"
+                  name="isNew"
+                  checked={formData.isNew}
+                  onChange={handleChange}
+                  className="w-5 h-5 rounded border-stone-300 text-amber-500 focus:ring-amber-500"
+                />
+                <label htmlFor="isNew" className="text-sm font-medium text-stone-600">New Arrival</label>
+              </div>
             </div>
           </div>
 

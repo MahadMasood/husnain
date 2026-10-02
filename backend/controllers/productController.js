@@ -73,7 +73,8 @@ const createProduct = async (req, res) => {
       image,
       rating,
       inStock,
-      isNew
+      isNew,
+      images
     } = req.body;
 
     const product = new Product({
@@ -84,6 +85,7 @@ const createProduct = async (req, res) => {
       colors: colors || [],
       size: size || [],
       image,
+      images: images || [],
       rating: rating || 0,
       inStock: inStock === undefined ? true : inStock,
       new: isNew === undefined ? false : isNew,
@@ -111,7 +113,8 @@ const updateProduct = async (req, res) => {
       image,
       rating,
       inStock,
-      isNew
+      isNew,
+      images
     } = req.body;
 
     const product = await Product.findById(req.params.id);
@@ -124,6 +127,7 @@ const updateProduct = async (req, res) => {
       product.colors = colors || product.colors;
       product.size = size || product.size;
       product.image = image || product.image;
+      product.images = images || product.images;
       product.rating = rating || product.rating;
       if (inStock !== undefined) product.inStock = inStock;
       if (isNew !== undefined) product.new = isNew;

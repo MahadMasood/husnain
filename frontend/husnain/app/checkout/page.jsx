@@ -97,7 +97,6 @@ function ShippingStep({ form, setForm, errors }) {
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex items-start gap-3">
         <Gift className="w-5 h-5 text-amber-500 mt-0.5 shrink-0" />
         <div>
-          <p className="text-sm font-semibold text-amber-800">Free delivery on orders over $100!</p>
           <p className="text-xs text-amber-600 font-mono mt-0.5">Standard delivery: 3-5 business days</p>
         </div>
       </div>
@@ -133,8 +132,8 @@ function ShippingStep({ form, setForm, errors }) {
         </label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {[
-            { id: "standard", label: "Standard Delivery", time: "3-5 business days", price: "Free over $100", icon: Truck },
-            { id: "express", label: "Express Delivery", time: "1-2 business days", price: "+ $14.99", icon: Clock },
+            { id: "standard", label: "Standard Delivery", time: "3-5 business days", price: "Rs 200", icon: Truck },
+            { id: "express", label: "Express Delivery", time: "1-2 business days", price: "+ Rs 400", icon: Clock },
           ].map((opt) => (
             <button
               key={opt.id}
@@ -190,30 +189,38 @@ function PaymentStep({ form, setForm, errors }) {
       </div>
 
       <div className="space-y-3">
-        {paymentMethods.map((method) => (
-          <button
-            key={method.id}
-            onClick={() => setForm({ ...form, paymentMethod: method.id })}
-            className={`w-full flex items-center gap-4 p-5 border-2 rounded-xl text-left transition-all ${
-              form.paymentMethod === method.id
-                ? "border-amber-500 bg-amber-50/50 shadow-sm"
-                : "border-stone-200 hover:border-stone-300 bg-white"
-            }`}
-          >
-            <span className="text-2xl">{method.icon}</span>
-            <div className="flex-1">
-              <p className={`font-bold ${form.paymentMethod === method.id ? "text-amber-700" : "text-slate-700"}`}>{method.label}</p>
-              <p className="font-mono text-xs text-stone-400 mt-0.5">{method.desc}</p>
-            </div>
-            <div
-              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
-                form.paymentMethod === method.id ? "border-amber-500" : "border-stone-300"
+        {paymentMethods.map((method) => {
+          const isDisabled = method.id !== "cod";
+          return (
+            <button
+              key={method.id}
+              onClick={() => !isDisabled && setForm({ ...form, paymentMethod: method.id })}
+              disabled={isDisabled}
+              className={`w-full flex items-center gap-4 p-5 border-2 rounded-xl text-left transition-all ${
+                form.paymentMethod === method.id
+                  ? "border-amber-500 bg-amber-50/50 shadow-sm"
+                  : isDisabled
+                  ? "border-stone-100 bg-stone-50 opacity-60 cursor-not-allowed"
+                  : "border-stone-200 hover:border-stone-300 bg-white"
               }`}
             >
-              {form.paymentMethod === method.id && <div className="w-2.5 h-2.5 bg-amber-500 rounded-full" />}
-            </div>
-          </button>
-        ))}
+              <span className={`text-2xl ${isDisabled ? "grayscale opacity-50" : ""}`}>{method.icon}</span>
+              <div className="flex-1">
+                <p className={`font-bold ${form.paymentMethod === method.id ? "text-amber-700" : isDisabled ? "text-stone-400" : "text-slate-700"}`}>
+                  {method.label} {isDisabled && <span className="text-[10px] bg-stone-200 text-stone-500 px-2 py-0.5 rounded ml-2 font-mono uppercase tracking-wider">Coming Soon</span>}
+                </p>
+                <p className="font-mono text-xs text-stone-400 mt-0.5">{method.desc}</p>
+              </div>
+              <div
+                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                  form.paymentMethod === method.id ? "border-amber-500" : isDisabled ? "border-stone-200" : "border-stone-300"
+                }`}
+              >
+                {form.paymentMethod === method.id && <div className="w-2.5 h-2.5 bg-amber-500 rounded-full" />}
+              </div>
+            </button>
+          );
+        })}
         {errors.paymentMethod && (
           <p className="text-red-500 text-xs font-mono flex items-center gap-1">
             <AlertCircle className="w-3 h-3" /> {errors.paymentMethod}
@@ -433,11 +440,6 @@ function OrderSummary({ cartItems, cartTotal, shipping, tax, orderTotal, promoCo
             )}
           </span>
         </div>
-        {shipping > 0 && (
-          <p className="text-xs text-amber-600 font-mono bg-amber-50 rounded-lg px-3 py-2">
-            Add Rs. {(100 - cartTotal).toFixed(2)} more for free shipping
-          </p>
-        )}
         <div className="flex justify-between text-sm text-stone-500">
           <span>Tax (est.)</span>
           <span className="font-mono">Rs. {tax.toFixed(2)}</span>
@@ -559,7 +561,7 @@ export default function CheckoutPage() {
     cardCvv: "",
   });
 
-  const shipping = form.deliveryMethod === "express" ? 14.99 : cartTotal >= 100 ? 0 : 9.99;
+  const shipping = form.deliveryMethod === "express" ? 400 : 200;
   const tax = cartTotal * 0.08;
   const orderTotal = cartTotal - discount + shipping + tax;
 

@@ -1,21 +1,33 @@
 "use client";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { PRODUCTS } from "@/components/products/productsData";
-import ProductCard from "@/components/products/ProductCard";
-import { useState } from "react";
+import { fetchProducts } from "@/lib/api";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
-// Create sale products — discount select items
-const SALE_PRODUCTS = PRODUCTS.map((p, i) => ({
-  ...p,
-  originalPrice: p.price,
-  price: i % 3 === 0 ? Math.round(p.price * 0.5) : i % 2 === 0 ? Math.round(p.price * 0.7) : Math.round(p.price * 0.8),
-  discount: i % 3 === 0 ? 50 : i % 2 === 0 ? 30 : 20,
-})).filter((_, i) => i < 12);
-
+import ProductCard from "@/components/products/ProductCard";
 export default function SalePage() {
   const [favorites, setFavorites] = useState([]);
+  const [saleProducts, setSaleProducts] = useState([]);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        const sale = data.map((p, i) => ({
+          ...p,
+          originalPrice: p.price,
+          price: i % 3 === 0 ? Math.round(p.price * 0.5) : i % 2 === 0 ? Math.round(p.price * 0.7) : Math.round(p.price * 0.8),
+          discount: i % 3 === 0 ? 50 : i % 2 === 0 ? 30 : 20,
+        })).filter((_, i) => i < 12);
+        setSaleProducts(sale);
+      } catch (error) {
+        console.error("Failed to load products for sale", error);
+      }
+    };
+    loadProducts();
+  }, []);
+
   const toggleFavorite = (id) => setFavorites((prev) => prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]);
 
   return (
@@ -46,7 +58,7 @@ export default function SalePage() {
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <p className="font-mono text-sm text-stone-500">{SALE_PRODUCTS.length} items on sale</p>
+            <p className="font-mono text-sm text-stone-500">{saleProducts.length} items on sale</p>
           </div>
           <p className="font-mono text-xs text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-full">
             ⏰ Sale ends Sunday midnight
@@ -54,8 +66,8 @@ export default function SalePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {SALE_PRODUCTS.map((product) => (
-            <div key={product.id} className="relative">
+          {saleProducts.map((product) => (
+            <div key={product._id || product.id} className="relative">
               <div className="absolute top-2 left-2 z-20 bg-red-500 text-white px-2 py-1 font-mono text-xs font-bold rounded-full">
                 -{product.discount}%
               </div>

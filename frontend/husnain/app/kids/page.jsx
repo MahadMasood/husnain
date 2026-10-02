@@ -1,16 +1,29 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/products/ProductCard";
-import { PRODUCTS } from "@/components/products/productsData";
+import { fetchProducts } from "@/lib/api";
 import Link from "next/link";
 
-const kidsProducts = PRODUCTS.filter(p => p.gender === "Kids");
 const ageGroups = ["All Ages", "2–4 Years", "5–7 Years", "8–10 Years", "11–14 Years"];
 
 export default function KidsPage() {
   const [favorites, setFavorites] = useState([]);
+  const [kidsProducts, setKidsProducts] = useState([]);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        setKidsProducts(data.filter(p => p.gender === "Kids"));
+      } catch (error) {
+        console.error("Failed to load kids products", error);
+      }
+    };
+    loadProducts();
+  }, []);
+
   const toggleFavorite = (id) => setFavorites((prev) => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
 
   return (

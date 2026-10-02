@@ -26,10 +26,10 @@ const ProductsGrid = memo(({ filteredProducts, viewMode, favorites, onToggleFavo
     }>
       {filteredProducts.map(product => (
         <ProductCard
-          key={product.id}
+          key={product._id || product.id}
           product={product}
           viewMode={viewMode}
-          isFavorite={favorites.includes(product.id)}
+          isFavorite={favorites.includes(product._id || product.id)}
           onToggleFavorite={onToggleFavorite}
         />
       ))}

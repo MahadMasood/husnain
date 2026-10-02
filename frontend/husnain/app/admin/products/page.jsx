@@ -22,6 +22,7 @@ function EditModal({ product, onClose, onSave, isSaving }) {
     colors: product.colors?.join(", ") || "",
     size: product.size?.join(", ") || "",
     rating: product.rating || 0,
+    images: product.images || [],
   });
   const [uploading, setUploading] = useState(false);
 
@@ -48,6 +49,24 @@ function EditModal({ product, onClose, onSave, isSaving }) {
     }
   };
 
+  const uploadAdditionalImagesHandler = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    const formDataData = new FormData();
+    files.forEach(file => formDataData.append('images', file));
+    setUploading(true);
+
+    try {
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+      const { data } = await api.post('/upload/multiple', formDataData, config);
+      setForm((prev) => ({ ...prev, images: data.images }));
+      setUploading(false);
+    } catch (err) {
+      console.error(err);
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(product._id, {
@@ -61,6 +80,7 @@ function EditModal({ product, onClose, onSave, isSaving }) {
       colors: form.colors.split(",").map((c) => c.trim()).filter(Boolean),
       size: form.size.split(",").map((s) => s.trim()).filter(Boolean),
       rating: Number(form.rating),
+      images: form.images,
     });
   };
 
@@ -154,18 +174,35 @@ function EditModal({ product, onClose, onSave, isSaving }) {
               />
             </div>
 
-            <div className="md:col-span-2">
+            <div className="md:col-span-1">
               <label className="block font-mono text-xs font-bold text-stone-500 uppercase tracking-wider mb-1.5">
-                Image Upload
+                Primary Image
               </label>
               <input
                 type="file"
                 name="image"
+                accept="image/*"
                 onChange={uploadFileHandler}
-                className="w-full px-4 py-3 border border-stone-200 rounded-xl font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 text-slate-700"
+                className="w-full px-4 py-3 border border-stone-200 rounded-xl font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 text-slate-700 bg-white"
               />
-              {uploading && <p className="text-sm mt-2 text-stone-500">Uploading...</p>}
-              {form.image && <p className="text-sm mt-2 text-green-600">Current image: {form.image}</p>}
+              {uploading && !form.image && <p className="text-sm mt-2 text-stone-500">Uploading...</p>}
+              {form.image && <p className="text-sm mt-2 text-green-600 truncate">Current: {form.image.split('/').pop()}</p>}
+            </div>
+
+            <div className="md:col-span-1">
+              <label className="block font-mono text-xs font-bold text-stone-500 uppercase tracking-wider mb-1.5">
+                Additional Images
+              </label>
+              <input
+                type="file"
+                name="images"
+                multiple
+                accept="image/*"
+                onChange={uploadAdditionalImagesHandler}
+                className="w-full px-4 py-3 border border-stone-200 rounded-xl font-mono text-sm focus:outline-none focus:ring-2 focus:ring-amber-400/30 focus:border-amber-400 text-slate-700 bg-white"
+              />
+              {uploading && form.images.length === 0 && <p className="text-sm mt-2 text-stone-500">Uploading...</p>}
+              {form.images.length > 0 && <p className="text-sm mt-2 text-green-600">{form.images.length} images selected</p>}
             </div>
 
             <div>
@@ -310,9 +347,9 @@ export default function AdminProducts() {
       const q = search.toLowerCase();
       result = result.filter(
         (p) =>
-          p.name?.toLowerCase().includes(q) ||
-          p.category?.toLowerCase().includes(q) ||
-          p.gender?.toLowerCase().includes(q)
+          (p.name?.toLowerCase() || "").includes(q) ||
+          (p.category?.toLowerCase() || "").includes(q) ||
+          (p.gender?.toLowerCase() || "").includes(q)
       );
     }
     if (categoryFilter !== "all") {
@@ -526,9 +563,11 @@ export default function AdminProducts() {
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <div className="w-12 h-12 bg-stone-100 rounded-lg overflow-hidden shrink-0">
-                          {product.image && (
-                            <Image src={product.image} alt={product.name} width={48} height={48} className="w-full h-full object-cover" />
-                          )}
+                            {product.image ? (
+                              <Image src={product.image || '/hero/hero1.jpg'} alt={product.name || 'Product'} width={48} height={48} className="w-full h-full object-cover" />
+                            ) : (
+                              <Image src="/hero/hero1.jpg" alt="Fallback" width={48} height={48} className="w-full h-full object-cover" />
+                            )}
                         </div>
                         <div>
                           <p className="font-semibold text-sm text-slate-900">{product.name}</p>

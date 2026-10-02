@@ -4,7 +4,7 @@ import { Heart, ShoppingBag, Truck, Shield, ArrowLeft, Star, Plus, Minus, Rotate
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import { useRouter, useParams } from "next/navigation";
-import { PRODUCTS } from "@/components/products/productsData";
+import { fetchProducts } from "@/lib/api";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 
@@ -22,18 +22,51 @@ const getColorHex = (colorName) => {
 export default function ProductDetailsPage() {
   const router = useRouter();
   const params = useParams();
-  const productId = parseInt(params.id);
+  const productId = params.id;
   const { addToCart } = useCart();
 
-  const product = PRODUCTS.find((p) => p.id === productId);
-  const related = PRODUCTS.filter((p) => p.id !== productId && (p.category === product?.category || p.gender === product?.gender)).slice(0, 4);
-
+  const [products, setProducts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
-  const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || "");
+  const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [addedToBag, setAddedToBag] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to load products", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadProducts();
+  }, []);
+
+  const product = products.find((p) => String(p._id) === String(productId) || String(p.id) === String(productId));
+  const related = products.filter((p) => String(p._id) !== String(productId) && String(p.id) !== String(productId) && (p.category === product?.category || p.gender === product?.gender)).slice(0, 4);
+
+  React.useEffect(() => {
+    if (product && product.colors && product.colors.length > 0) {
+      setSelectedColor(product.colors[0]);
+    }
+  }, [product]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-stone-50">
+        <Navbar />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <p className="text-stone-500 font-mono">Loading product...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -51,17 +84,19 @@ export default function ProductDetailsPage() {
     );
   }
 
-  const images = [product.image, '/hero/hero2.jpg', '/hero/hero3.jpg', product.image];
+  const safeImage = product.image || '/hero/hero1.jpg';
+  const additionalImages = product.images || [];
+  const images = [safeImage, ...additionalImages];
 
   const handleAddToBag = () => {
     if (!selectedSize) return;
     // Add item to cart for each unit of the selected quantity
     for (let i = 0; i < quantity; i++) {
       addToCart({
-        id: product.id,
+        id: product._id || product.id,
         name: product.name,
         price: product.price,
-        image: product.image,
+        image: safeImage,
         size: selectedSize,
         color: selectedColor,
         category: product.category,
@@ -93,7 +128,7 @@ export default function ProductDetailsPage() {
             <div className="relative aspect-square bg-stone-100 rounded-2xl overflow-hidden group">
               <Image
                 src={images[selectedImage]}
-                alt={product.name}
+                alt={product.name || 'Product'}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -138,7 +173,7 @@ export default function ProductDetailsPage() {
                 {product.category} · {product.gender}
               </p>
               <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 mb-2">{product.name}</h1>
-              <p className="font-mono text-xs text-stone-400">SKU: TC-{String(product.id).padStart(4, '0')}</p>
+              <p className="font-mono text-xs text-stone-400">SKU: TC-{String(product._id || product.id).slice(-4).padStart(4, '0')}</p>
             </div>
 
             <div className="flex items-center gap-3">
@@ -265,14 +300,14 @@ export default function ProductDetailsPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {related.map((p) => (
                 <Link
-                  key={p.id}
-                  href={`/products/${p.id}`}
+                  key={p._id || p.id}
+                  href={`/products/${p._id || p.id}`}
                   className="bg-white border border-stone-200 rounded-xl overflow-hidden hover:border-amber-400 hover:shadow-md transition-all group"
                 >
                   <div className="aspect-square bg-stone-100 relative overflow-hidden">
                     <Image
-                      src={p.image}
-                      alt={p.name}
+                      src={p.image || '/hero/hero1.jpg'}
+                      alt={p.name || 'Related Product'}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
                       sizes="25vw"

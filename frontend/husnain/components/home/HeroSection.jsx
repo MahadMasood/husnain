@@ -41,7 +41,6 @@ const HeroContent = memo(() => {
       </div>
 
       <div className="font-mono text-xs text-white/50 mt-16 flex items-center gap-6">
-        <span>Free shipping over $100</span>
         <span className="w-1 h-1 bg-amber-500 rounded-full" />
         <span>30-day returns</span>
         <span className="w-1 h-1 bg-amber-500 rounded-full" />

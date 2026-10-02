@@ -103,11 +103,11 @@ const ProductFilters = memo(({
               leftIcon={<p>-</p>}
               rightIcon={<p>+</p>}
               startingValue={0}
-              defaultValue={250}
-              maxValue={250}
+              defaultValue={15000}
+              maxValue={15000}
               isStepped
               onChange={(newValue) => setPriceRange([priceRange[0], newValue])}
-              stepSize={10}
+              stepSize={100}
             />
           </div>
         </div>

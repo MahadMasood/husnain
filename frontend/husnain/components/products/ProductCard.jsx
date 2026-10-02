@@ -42,7 +42,7 @@ const ProductCard = memo(({
 
   return (
     <div
-      onClick={() => clickable && router.push(`/products/${product.id}`)}
+      onClick={() => clickable && router.push(`/products/${product._id || product.id}`)}
       className={`border border-stone-200 hover:border-amber-400 hover:shadow-md transition-all group relative bg-white rounded-lg overflow-hidden cursor-pointer ${
         viewMode === 'list' ? 'flex gap-4' : ''
       }`}
@@ -54,7 +54,7 @@ const ProductCard = memo(({
       )}
 
       <button
-        onClick={(e) => { e.stopPropagation(); onToggleFavorite && onToggleFavorite(product.id); }}
+        onClick={(e) => { e.stopPropagation(); onToggleFavorite && onToggleFavorite(product._id || product.id); }}
         className="absolute top-2 right-2 z-10 p-2 bg-white/90 hover:bg-white rounded-full transition-colors shadow-sm"
       >
         <Heart className={`w-4 h-4 ${isFavorite ? 'fill-amber-500 text-amber-500' : 'text-stone-400'}`} />
@@ -64,8 +64,8 @@ const ProductCard = memo(({
         viewMode === 'list' ? 'w-40 h-40 shrink-0 rounded-l-lg' : 'h-64'
       }`}>
         <Image
-          src={product.image}
-          alt={product.name}
+          src={product.image || '/hero/hero1.jpg'}
+          alt={product.name || 'Product'}
           width={800}
           height={500}
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
